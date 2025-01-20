@@ -4,6 +4,8 @@ const globals = require('./helpers/globals');
 const express = require("express");
 const session = require('express-session');
 const passport = require('passport');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const DB = require('./models/index');
 
 if (globals.testing) {
     console.log('\n   globals: ', globals);
@@ -29,12 +31,15 @@ app.use(morgan(function (tokens, req, res) {
     ].join(' ');
 }));
 
+const myStore = new SequelizeStore({
+    db: DB.sequelize
+});
 if (globals.localDeploy) {
     app.use(session({
         secret: globals.sessionSecret,
         resave: false,
         saveUninitialized: false,
-        // store: dbStore,
+        store: myStore,
         cookie: {
             httpOnly: true,
             maxAge: globals.loginExpirationTime,
@@ -47,7 +52,7 @@ if (globals.localDeploy) {
         secret: globals.sessionSecret,
         resave: false,
         saveUninitialized: false,
-        // store: dbStore,
+        store: myStore,
         cookie: {
             httpOnly: true,
             maxAge: globals.loginExpirationTime,
@@ -56,6 +61,8 @@ if (globals.localDeploy) {
         }
     }));
 }
+myStore.sync();
+
 app.use(passport.authenticate('session'));
 
 app.use('/', require('./routes/routes'));

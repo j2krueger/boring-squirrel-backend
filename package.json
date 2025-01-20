@@ -1,7 +1,7 @@
 {
-  "name": "template-express",
+  "name": "boring-squirrel-backend",
   "version": "1.0.0",
-  "description": "Template for express based applications.",
+  "description": "Play stupid games. Don't win stupid prizes.",
   "license": "ISC",
   "author": "j2k",
   "type": "commonjs",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "connect-session-sequelize": "^7.1.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
