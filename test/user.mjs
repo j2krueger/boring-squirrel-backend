@@ -29,8 +29,9 @@ describe('Test the user handling routes', function () {
 
                     expect(res).to.have.status(200);
                     expect(res.body).to.deep.equal({ message: "User registered" });
-
                     const createdUser = await User.getUserByUsername(testUser.username);
+                    expect(createdUser).to.not.be.null;
+
                     await createdUser.destroy();
                 });
             });

@@ -37,4 +37,5 @@ module.exports = {
     testing: process.env.TESTING,
     mochaTestingUrl: process.env.MOCHA_TESTING_URL,
     testString: process.env.TEST_STRING,
+    corsAllowURLs: process.env.SERVER_URL.split(' '),
 }

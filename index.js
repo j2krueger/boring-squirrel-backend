@@ -6,12 +6,13 @@ const session = require('express-session');
 const passport = require('passport');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const DB = require('./models/index');
+const morgan = require('morgan');
+const cors = require('cors');
 
 if (globals.testing) {
     console.log('\n   globals: ', globals);
 }
 
-const morgan = require('morgan');
 
 const app = express();
 
@@ -29,6 +30,10 @@ app.use(morgan(function (tokens, req, res) {
         tokens['response-time'](req, res), 'ms',
         // "req.body:", JSON.stringify(req.body)
     ].join(' ');
+}));
+app.use(cors({
+    origin: globals.corsAllowURLs,
+    credentials: true
 }));
 
 const myStore = new SequelizeStore({
