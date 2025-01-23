@@ -1,8 +1,7 @@
 openapi: 3.1.0
 info:
   title: Project Title
-  description:
-    "Project Description"
+  description: "Project Description"
   version: 1.0.0
 servers:
   - url: /
@@ -53,11 +52,13 @@ paths:
                 missingPassword:
                   value: { "error": "Missing password." }
                 shortPassword:
-                  value: { "error": 'Password must be at least 6 characters long.' }
+                  value:
+                    { "error": "Password must be at least 6 characters long." }
                 missingUsername:
                   value: { "error": "Missing username." }
                 longUsername:
-                  value: { error: "Username may not be longer than 20 characters." }
+                  value:
+                    { error: "Username may not be longer than 20 characters." }
                 missingEmail:
                   value: { "error": "Missing email." }
         "409":
@@ -69,8 +70,6 @@ paths:
                   value: { "error": "username already in use." }
                 duplicateEmail:
                   value: { "error": "Email already in use." }
-        default:
-          description: Default error sample response
   /login:
     summary: POST login
     post:
@@ -79,8 +78,8 @@ paths:
       summary: Login user
       description:
         "Post the username and password entered by the user, name may be either a username or an email,
-         username checked first. If the name matches a user and the password is correct for that user,
-         log them in."
+        username checked first. If the name matches a user and the password is correct for that user,
+        log them in."
       operationId: login_user
       requestBody:
         description: Submit a request to login
@@ -125,8 +124,6 @@ paths:
           content:
             application/json:
               example: { "error": "Incorrect name or password." }
-        default:
-          description: Default error sample response
   /logout:
     summary: POST logout
     post:
@@ -147,8 +144,27 @@ paths:
           content:
             application/json:
               example: { "message": "Logout successful." }
-        default:
-          description: Default error sample response
+  /profile:
+    summary: GET the user's profile information
+    get:
+      tags:
+        - user
+      summary: GET the user's profile information
+      description: GET everything from the logged in user's Users row except the passwordHash. Will redirect if no user logged in.
+      operationId: get_profile
+      responses:
+        "200":
+          description: Success!
+          content:
+            application/json:
+              example:
+                {
+                  "id": 23,
+                  "username": "john",
+                  "email": "john@example.com",
+                  "createdAt": "2025-01-20T17:24:03.127Z",
+                  "updatedAt": "2025-01-20T17:24:03.127Z",
+                }
 components:
   schemas:
     Register:
