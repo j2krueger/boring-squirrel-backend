@@ -213,4 +213,36 @@ describe('Test the user handling routes', function () {
             });
         });
     });
+
+    describe('GET /profile', function () {
+        describe('Happy paths', function () {
+            describe('GET /profile with logged in user', function () {
+                it('should return a 200 status and return the private profile of the logged in user', async function () {
+                    const loginRes = await agent.post('/login').send(generateTestUser('DT'));
+                    expect(loginRes).to.redirectTo(globals.mochaTestingUrl + '/');
+
+                    const res = await agent.get('/profile');
+                    const user = await User.getUserByUsername(generateTestUser('DT').username);
+
+                    expect(res).to.have.status(200);
+                    expect(user).to.not.be.null;
+                    for (const property of globals.privateProfileFields) {
+                        expect(JSON.stringify(res.body[property])).to.deep.equal(JSON.stringify(user[property]));
+                    }
+                });
+            });
+        });
+
+        describe('Sad paths', function () {
+            describe('Get /profile with no logged in user', function () {
+                it('should redirect to /login', async function () {
+                    await agent.post('/logout');
+
+                    const res = await agent.get('/profile');
+
+                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/login');
+                });
+            });
+        });
+    });
 });

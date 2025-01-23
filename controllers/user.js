@@ -35,32 +35,6 @@ async function registerUser(req, res) {
     }
 }
 
-
-/* async function loginUser(req, res, next) {
-    const name = req.body?.name;
-    const password = req.body?.password;
-    if (!name) {
-        return res.status(400).json({ error: "Missing name." });
-    } else if (!password) {
-        return res.status(400).json({ error: "Missing password." });
-    } else {
-        const user = await User.findOne({ username: name }) || await User.findOne({ email: name });
-        if (!user || !await bcrypt.compare(password, user.passwordHash)) {
-            return res.status(401).json({ error: "Incorrect name or password." });
-        } else {
-            req.session.regenerate(function (error) {
-                if (error) next(error);
-                req.session.user = user;
-                req.session.save(async function (error) {
-                    if (error) next(error);
-                    const fullUser = await User.findByIdAndPopulate(user._id);
-                    return res.status(200).json(fullUser.privateProfile());
-                });
-            });
-        }
-    }
-} */
-
 async function getRoot(req, res) {
     return res.status(200).json(req.session);
 }
@@ -72,10 +46,14 @@ function logoutUser(req, res, next) {
     });
 }
 
+function getProfile(req, res) {
+    return res.status(200).json(req.authenticatedUser.privateProfile());
+}
 
 module.exports = {
     registerUser,
     // loginUser,
     getRoot,
     logoutUser,
+    getProfile,
 };

@@ -8,6 +8,7 @@ const userControllers = require('../controllers/user');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('../models/user');
+const auth = require('../helpers/auth');
 
 passport.use(new LocalStrategy(User.passportVerify));
 
@@ -24,7 +25,7 @@ passport.serializeUser(function (user, cb) {
 
 passport.deserializeUser(function (id, cb) {
     queueMicrotask(function () {
-        return cb(null, User.findOne({ where: { id: id } }));
+        return cb(null, User.findByPk(id));
     });
 });
 
@@ -37,5 +38,6 @@ router.post('/login', passport.authenticate('local', {
 router.get('/', userControllers.getRoot);
 router.post('/', userControllers.getRoot);
 router.post('/logout', userControllers.logoutUser);
+router.get('/profile', auth.userAuth, userControllers.getProfile);
 
 module.exports = router;

@@ -28,6 +28,13 @@ module.exports = {
     minimumPasswordLength: 6,
     maximumUsernameLength: 20,
     saltRounds: 10,
+    privateProfileFields: [
+        "id",
+        "username",
+        "email",
+        "createdAt",
+        "updatedAt",
+    ],
 
     // configuration values loaded from .env
     port: process.env.PORT,

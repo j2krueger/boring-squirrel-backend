@@ -4,6 +4,7 @@ const DB = require('./index');
 const { DataTypes, Model } = require("sequelize");
 // const globals = require('../helpers/globals');
 const bcrypt = require('bcrypt');
+const globals = require('../helpers/globals');
 // const { minimumPasswordLength, maximumUsernameLength, saltRounds } = globals;
 
 class User extends Model {
@@ -39,6 +40,14 @@ class User extends Model {
             },
         });
         return foundUser;
+    }
+
+    privateProfile() {
+        const result = {};
+        for (const property of globals.privateProfileFields) {
+            result[property] = this[property];
+        }
+        return result;
     }
 }
 
