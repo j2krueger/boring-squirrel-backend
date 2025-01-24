@@ -39,5 +39,6 @@ router.get('/', userControllers.getRoot);
 router.post('/', userControllers.getRoot);
 router.post('/logout', userControllers.logoutUser);
 router.get('/profile', auth.userAuth, userControllers.getProfile);
+router.get('/leaderboard', userControllers.getLeaderboard);
 
 module.exports = router;

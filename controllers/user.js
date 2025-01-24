@@ -50,10 +50,28 @@ function getProfile(req, res) {
     return res.status(200).json(req.authenticatedUser.privateProfile());
 }
 
+async function getLeaderboard(req, res) {
+    return res.status(200).json({
+        highestWinLossRatio: [
+            { username: "apmanager", wins: 1, losses: 0 },
+            { username: "john", wins: 0, losses: 1 },
+        ],
+        mostWins: [
+            { username: "apmanager", wins: 1 },
+            { username: "john", wins: 0 },
+        ],
+        mostPlays: [
+            { username: "john", plays: 1 },
+            { username: "apmanager", plays: 1 },
+        ],
+    });
+}
+
 module.exports = {
     registerUser,
     // loginUser,
     getRoot,
     logoutUser,
     getProfile,
+    getLeaderboard,
 };
