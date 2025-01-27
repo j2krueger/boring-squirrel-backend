@@ -11,7 +11,7 @@ class User extends Model {
     static async passportVerify(username, password, cb) {
         let user;
         try {
-            user = await User.getUserByUsername(username);
+            user = (await User.getUserByUsername(username))||(await User.getUserByEmail(username));
         } catch (error) {
             return cb(error);
         }
