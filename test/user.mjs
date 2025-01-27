@@ -126,9 +126,23 @@ describe('Test the user handling routes', function () {
 
     describe('POST /login', function () {
         describe('Happy paths', function () {
-            describe('POST /login with valid credentials', function () {
+            describe('POST /login with valid username and password', function () {
                 it('should redirect to /', async function () {
-                    const res = await agent.post('/login').send(generateTestUser('DT'));
+                    const user = generateTestUser('DT');
+                    const loginCredentials = { username: user.username, password: user.password };
+
+                    const res = await agent.post('/login').send(loginCredentials);
+
+                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/');
+                });
+            });
+
+            describe('POST /login with valid email and password', function () {
+                it('should redirect to /', async function () {
+                    const user = generateTestUser('DT');
+                    const loginCredentials = { username: user.email, password: user.password };
+
+                    const res = await agent.post('/login').send(loginCredentials);
 
                     expect(res).to.redirectTo(globals.mochaTestingUrl + '/');
                 });
@@ -138,10 +152,10 @@ describe('Test the user handling routes', function () {
         describe('Sad paths', function () {
             describe('POST /login with bad username', function () {
                 it('should redirect to /loginError', async function () {
-                    const badUsername = generateTestUser('DT');
-                    badUsername.username = testGlobals.testString + testGlobals.testString;
+                    const user = generateTestUser('DT');
+                    const loginCredentials = { username: user.username + user.username, password: user.password };
 
-                    const res = await agent.post('/login').send(badUsername);
+                    const res = await agent.post('/login').send(loginCredentials);
 
                     expect(res).to.redirectTo(globals.mochaTestingUrl + '/loginError');
                 });
@@ -149,10 +163,10 @@ describe('Test the user handling routes', function () {
 
             describe('POST /login with bad password', function () {
                 it('should redirect to /loginError', async function () {
-                    const badPassword = generateTestUser('DT');
-                    badPassword.password = testGlobals.testString + testGlobals.testString;
+                    const user = generateTestUser('DT');
+                    const loginCredentials = { username: user.username, password: user.password + "bad" };
 
-                    const res = await agent.post('/login').send(badPassword);
+                    const res = await agent.post('/login').send(loginCredentials);
 
                     expect(res).to.redirectTo(globals.mochaTestingUrl + '/loginError');
                 });
@@ -160,10 +174,10 @@ describe('Test the user handling routes', function () {
 
             describe('POST /login with no username', function () {
                 it('should redirect to /loginError', async function () {
-                    const noUsername = generateTestUser('DT');
-                    noUsername.username = undefined;
+                    const user = generateTestUser('DT');
+                    const loginCredentials = { password: user.password };
 
-                    const res = await agent.post('/login').send(noUsername);
+                    const res = await agent.post('/login').send(loginCredentials);
 
                     expect(res).to.redirectTo(globals.mochaTestingUrl + '/loginError');
                 });
@@ -171,10 +185,10 @@ describe('Test the user handling routes', function () {
 
             describe('POST /login with no password', function () {
                 it('should redirect to /loginError', async function () {
-                    const noPassword = generateTestUser('DT');
-                    noPassword.password = undefined;
+                    const user = generateTestUser('DT');
+                    const loginCredentials = { username: user.username };
 
-                    const res = await agent.post('/login').send(noPassword);
+                    const res = await agent.post('/login').send(loginCredentials);
 
                     expect(res).to.redirectTo(globals.mochaTestingUrl + '/loginError');
                 });
