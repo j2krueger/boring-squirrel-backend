@@ -3,7 +3,8 @@
 const globals = require('../helpers/globals');
 const bcrypt = require('bcrypt');
 const { minimumPasswordLength, maximumUsernameLength, saltRounds } = globals;
-const User = require('../models/user');
+const { User } = require('../models/combined');
+// const OAuth = require('../models/oauth');
 
 async function registerUser(req, res) {
     if (!req.body?.password) {

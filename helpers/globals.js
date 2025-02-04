@@ -45,4 +45,7 @@ module.exports = {
     mochaTestingUrl: process.env.MOCHA_TESTING_URL,
     testString: process.env.TEST_STRING,
     corsAllowURLs: process.env.SERVER_URL.split(' '),
+    googleClientId: process.env.GOOGLE_CLIENT_ID,
+    googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL,
 }

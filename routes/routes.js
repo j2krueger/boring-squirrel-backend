@@ -7,19 +7,52 @@ const cors = require('cors');
 const userControllers = require('../controllers/user');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const User = require('../models/user');
+const GoogleStrategy = require('passport-google-oauth20');
+const { User, OAuth } = require('../models/combined');
 const auth = require('../helpers/auth');
 
 passport.use(new LocalStrategy(User.passportVerify));
+
+passport.use(new GoogleStrategy(
+    {
+        clientID: globals.googleClientId,
+        clientSecret: globals.googleClientSecret,
+        callbackURL: globals.googleCallbackUrl,
+        passReqToCallback: true,
+    },
+    User.passportGoogleVerify));
 
 router.use(cors({
     origin: globals.corsAllowURLs,
     credentials: true
 }));
 
-passport.serializeUser(function (user, cb) {
-    queueMicrotask(function () {
-        cb(null, user.id);
+passport.serializeUser(function (profile, cb) {
+    queueMicrotask(async function () {
+        if (profile?.provider) {
+            const user = await User.getUserByOauth(profile.provider, profile.id);
+            if (!user) {
+                // create user or link to existing user
+                const oauth = await OAuth.create(
+                    {
+                        provider: profile.provider,
+                        id: profile.id,
+                        User: {
+                            username: profile.displayName,
+                            email: profile.emails?.[0]?.value,
+                        },
+                    },
+                    {
+                        include: [OAuth.User],
+                    }
+                );
+                cb(null, oauth.User.id);
+            } else {
+                cb(null, user.id);
+            }
+        } else {
+            cb(null, profile.id);
+        }
     });
 });
 
@@ -35,10 +68,38 @@ router.post('/login', passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/loginError'
 }));
+router.get('/login', function (req, res) {
+    res.status(200).json({
+        body: req.body,
+        query: req.query,
+    })
+});
+
 router.get('/', userControllers.getRoot);
 router.post('/', userControllers.getRoot);
 router.post('/logout', userControllers.logoutUser);
 router.get('/profile', auth.userAuth, userControllers.getProfile);
 router.get('/leaderboard', userControllers.getLeaderboard);
+router.get('/google',
+    passport.authenticate('google', {
+        scope: [
+            "email",
+            "profile",
+            // "openid"
+        ],
+    }),
+);
+router.get('/google/callback',
+    passport.authenticate("google", {
+        access_type: "offline",
+    }),
+    (req, res) => {
+        if (!req.user) {
+            return res.status(400).json({ error: "Authentication failed" });
+        }
+
+        // return user details
+        res.status(200).json(req.user);
+    });
 
 module.exports = router;

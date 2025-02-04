@@ -5,23 +5,31 @@ const { DataTypes, Model } = require("sequelize");
 // const globals = require('../helpers/globals');
 const bcrypt = require('bcrypt');
 const globals = require('../helpers/globals');
-// const { minimumPasswordLength, maximumUsernameLength, saltRounds } = globals;
 
 class User extends Model {
-    static async passportVerify(username, password, cb) {
+    static async passportVerify(username, password, done) {
         let user;
         try {
-            user = (await User.getUserByUsername(username))||(await User.getUserByEmail(username));
+            user = (await User.getUserByUsername(username)) || (await User.getUserByEmail(username));
         } catch (error) {
-            return cb(error);
+            return done(error);
         }
         if (!user) {
-            return cb(null, false, { message: "Incorrect username or password." });
+            return done(null, false, { message: "Incorrect username or password." });
         }
         if (!await bcrypt.compare(password, user.passwordHash)) {
-            return cb(null, false, { message: "Incorrect username or password." });
+            return done(null, false, { message: "Incorrect username or password." });
         }
-        return cb(null, user);
+        return done(null, user);
+    }
+
+    static async passportGoogleVerify(req, accessToken, refreshToken, profile, done) {
+        return done(null, profile);
+    }
+
+    static async getUserByOauth(provider, id) {
+        const oauth = await DB.sequelize.models.OAuth.findOne({ where: { provider, id }, include: User });
+        return oauth?.User;
     }
 
     static async getUserByUsername(username) {
@@ -70,16 +78,12 @@ User.init(
         },
         passwordHash: {
             type: DataTypes.TEXT,
-            allowNull: false,
         },
     },
     {
         sequelize: DB.sequelize,
     }
 );
-
-User.sync({ alter: true });
-
 
 /* class User {
     constructor(username, email, passwordHash) {

@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "mocha -b --timeout 120000 --require ./test/hooks.mjs && jplay ~/Alarms/success-1.mp3 || jplay ~/Alarms/sad-trombone.mp3",
-    "start": "node index.js",
+    "start": "nodemon --delay 5 index.js",
     "lint": "./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js",
     "finddebug": "! grep Debug -H -n *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js",
     "findfixme": "! grep FIXME -H -n *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js",
@@ -27,7 +27,9 @@
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "morgan": "^1.10.0",
+    "nodemon": "^3.1.9",
     "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
