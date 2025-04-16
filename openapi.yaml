@@ -70,6 +70,55 @@ paths:
                   value: { "error": "username already in use." }
                 duplicateEmail:
                   value: { "error": "Email already in use." }
+  /google:
+    summary: GET to initiate Google SSO
+    get:
+      tags:
+        - user
+      summary: GET to initiate Google SSO
+      description: GET the user's Google SSO profile and log them in.
+      operationId: google_sso
+      responses:
+        "200":
+          description: Success!
+          content:
+            application/json:
+              example:
+                {
+                  "id": "112044111156969565327",
+                  "displayName": "John Krueger",
+                  "name": { "familyName": "Krueger", "givenName": "John" },
+                  "emails":
+                    [
+                      {
+                        "value": "jentlejeniuskat@gmail.com",
+                        "verified": true,
+                      },
+                    ],
+                  "photos":
+                    [
+                      {
+                        "value": "https://lh3.googleusercontent.com/a/ACg8ocKmr5OmoIa3C5iqE0f0u8MoW3ac4sl4S36wukFD-zSpITLgkA=s96-c",
+                      },
+                    ],
+                  "provider": "google",
+                  "_raw": "{\n  \"sub\": \"112044111156969565327\",\n  \"name\": \"John Krueger\",\n  \"given_name\": \"John\",\n  \"family_name\": \"Krueger\",\n  \"picture\": \"https://lh3.googleusercontent.com/a/ACg8ocKmr5OmoIa3C5iqE0f0u8MoW3ac4sl4S36wukFD-zSpITLgkA\\u003ds96-c\",\n  \"email\": \"jentlejeniuskat@gmail.com\",\n  \"email_verified\": true\n}",
+                  "_json":
+                    {
+                      "sub": "112044111156969565327",
+                      "name": "John Krueger",
+                      "given_name": "John",
+                      "family_name": "Krueger",
+                      "picture": "https://lh3.googleusercontent.com/a/ACg8ocKmr5OmoIa3C5iqE0f0u8MoW3ac4sl4S36wukFD-zSpITLgkA=s96-c",
+                      "email": "jentlejeniuskat@gmail.com",
+                      "email_verified": true,
+                    },
+                }
+        "400":
+          description: failure
+          content:
+            application/json:
+              example: { "error": "Authentication failed" }
   /login:
     summary: POST login
     post:
