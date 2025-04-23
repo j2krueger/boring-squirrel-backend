@@ -99,7 +99,7 @@ router.get('/google/callback',
         }
 
         // return user details
-        res.status(200).json(req.user);
+        res.redirect('/');
     });
 
 module.exports = router;
