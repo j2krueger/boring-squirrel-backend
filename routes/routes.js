@@ -99,7 +99,8 @@ router.get('/google/callback',
         }
 
         // return user details
-        res.redirect('/');
+        // res.redirect('/');
+        res.redirect('https://boringsquirrel.com/account');
     });
 
 module.exports = router;
