@@ -48,7 +48,13 @@ function logoutUser(req, res, next) {
 }
 
 function getProfile(req, res) {
-    return res.status(200).json(req.authenticatedUser.privateProfile());
+    let result = req?.authenticatedUser?.privateProfile();
+    if (result) {
+        return res.status(200).json(req.authenticatedUser.privateProfile());
+    } else {
+        return res.status(404).json({ error: "No user logged in." });
+    }
+
 }
 
 async function getLeaderboard(req, res) {

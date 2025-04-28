@@ -51,11 +51,15 @@ class User extends Model {
     }
 
     privateProfile() {
-        const result = {};
-        for (const property of globals.privateProfileFields) {
-            result[property] = this[property];
+        if (this.id) {
+            const result = {};
+            for (const property of globals.privateProfileFields) {
+                result[property] = this[property];
+            }
+            return result;
+        } else {
+            return {};
         }
-        return result;
     }
 }
 

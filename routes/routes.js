@@ -78,7 +78,7 @@ router.get('/login', function (req, res) {
 router.get('/', userControllers.getRoot);
 router.post('/', userControllers.getRoot);
 router.post('/logout', userControllers.logoutUser);
-router.get('/profile', auth.userAuth, userControllers.getProfile);
+router.get('/profile', auth.userAuthNoRedirect, userControllers.getProfile);
 router.get('/leaderboard', userControllers.getLeaderboard);
 router.get('/google',
     passport.authenticate('google', {

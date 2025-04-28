@@ -199,7 +199,7 @@ paths:
       tags:
         - user
       summary: GET the user's profile information
-      description: GET everything from the logged in user's Users row except the passwordHash. Will redirect if no user logged in.
+      description: GET everything from the logged in user's Users row except the passwordHash.
       operationId: get_profile
       responses:
         "200":
@@ -214,6 +214,11 @@ paths:
                   "createdAt": "2025-01-20T17:24:03.127Z",
                   "updatedAt": "2025-01-20T17:24:03.127Z",
                 }
+        "404":
+          description: No logged in user
+          content:
+            application/json:
+              example: { "error": "No user logged in." }
 components:
   schemas:
     Register:
