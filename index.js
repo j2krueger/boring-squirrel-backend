@@ -46,6 +46,7 @@ if (globals.localDeploy) {
         saveUninitialized: false,
         store: myStore,
         cookie: {
+            domain: ".boringsquirrel.com",
             httpOnly: true,
             maxAge: globals.loginExpirationTime,
             sameSite: 'strict',
@@ -59,6 +60,7 @@ if (globals.localDeploy) {
         saveUninitialized: false,
         store: myStore,
         cookie: {
+            domain: ".boringsquirrel.com",
             httpOnly: true,
             maxAge: globals.loginExpirationTime,
             sameSite: 'none',
