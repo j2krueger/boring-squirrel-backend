@@ -60,7 +60,7 @@ if (globals.localDeploy) {
         saveUninitialized: false,
         store: myStore,
         cookie: {
-            domain: ".boringsquirrel.com",
+            // domain: ".boringsquirrel.com",
             httpOnly: true,
             maxAge: globals.loginExpirationTime,
             sameSite: 'none',
