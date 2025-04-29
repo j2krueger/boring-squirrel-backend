@@ -16,6 +16,7 @@ async function userAuth(req, res, next) {
     res.redirect('/login');
 }
 async function userAuthNoRedirect(req, res, next) {
+    console.log(req.session);
     if (req.authenticatedUser) { // We've already done this on this request, no need to hit the database again
         return next();
     }
