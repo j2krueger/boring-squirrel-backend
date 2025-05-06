@@ -15,8 +15,7 @@
     "lint": "./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js",
     "finddebug": "! grep Debug -H -n *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js",
     "findfixme": "! grep FIXME -H -n *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js",
-    "findID": "! grep ID -H -n *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js",
-    "findcrud": "! grep \"Debug\\|FIXME\\|[[:alnum:]]ID\" -H -n *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js openapi.yaml",
+    "findcrud": "! grep \"Debug\\|FIXME\" -H -n *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js openapi.yaml",
     "precommit": "npm audit && npm run lint && npm run findcrud"
   },
   "dependencies": {

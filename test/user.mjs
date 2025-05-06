@@ -151,46 +151,46 @@ describe('Test the user handling routes', function () {
 
         describe('Sad paths', function () {
             describe('POST /login with bad username', function () {
-                it('should redirect to /loginError', async function () {
+                it('should redirect to /login', async function () {
                     const user = generateTestUser('DT');
                     const loginCredentials = { username: user.username + user.username, password: user.password };
 
                     const res = await agent.post('/login').send(loginCredentials);
 
-                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/loginError');
+                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/login');
                 });
             });
 
             describe('POST /login with bad password', function () {
-                it('should redirect to /loginError', async function () {
+                it('should redirect to /login', async function () {
                     const user = generateTestUser('DT');
                     const loginCredentials = { username: user.username, password: user.password + "bad" };
 
                     const res = await agent.post('/login').send(loginCredentials);
 
-                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/loginError');
+                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/login');
                 });
             });
 
             describe('POST /login with no username', function () {
-                it('should redirect to /loginError', async function () {
+                it('should redirect to /login', async function () {
                     const user = generateTestUser('DT');
                     const loginCredentials = { password: user.password };
 
                     const res = await agent.post('/login').send(loginCredentials);
 
-                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/loginError');
+                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/login');
                 });
             });
 
             describe('POST /login with no password', function () {
-                it('should redirect to /loginError', async function () {
+                it('should redirect to /login', async function () {
                     const user = generateTestUser('DT');
                     const loginCredentials = { username: user.username };
 
                     const res = await agent.post('/login').send(loginCredentials);
 
-                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/loginError');
+                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/login');
                 });
             });
         });
@@ -254,7 +254,8 @@ describe('Test the user handling routes', function () {
 
                     const res = await agent.get('/profile');
 
-                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/login');
+                    expect(res).to.have.status(404);
+                    expect(res.body).to.deep.equal({ "error": "No user logged in." });
                 });
             });
         });

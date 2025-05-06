@@ -9,7 +9,7 @@ const {
     expect,
     agent,
     // globals
-    // globals,
+    globals,
     // testString,
     // testUsername,
     // testEmail,
@@ -40,7 +40,7 @@ export const mochaHooks = {
         // check default test user 1
         const loginRes = await agent.post('/login').send({ username: defaultTestUser.username, password: defaultTestUser.password });
 
-        expect(loginRes).to.have.status(200);
+        expect(loginRes).to.redirectTo(globals.mochaTestingUrl + '/');
     },
 
     async afterAll() {

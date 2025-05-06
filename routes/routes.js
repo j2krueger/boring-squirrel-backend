@@ -5,6 +5,7 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 const userControllers = require('../controllers/user');
+const miscControllers = require('../controllers/misc');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const GoogleStrategy = require('passport-google-oauth20');
@@ -66,7 +67,7 @@ passport.deserializeUser(function (id, cb) {
 router.post('/register', userControllers.registerUser);
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: '/loginError'
+    failureRedirect: '/login'
 }));
 router.get('/login', function (req, res) {
     res.status(200).json({
@@ -74,12 +75,16 @@ router.get('/login', function (req, res) {
         query: req.query,
     })
 });
-
 router.get('/', userControllers.getRoot);
 router.post('/', userControllers.getRoot);
 router.post('/logout', userControllers.logoutUser);
 router.get('/profile', auth.userAuthNoRedirect, userControllers.getProfile);
 router.get('/leaderboard', userControllers.getLeaderboard);
+
+// misc routes
+router.post('/newsletter', miscControllers.newsletter);
+
+// Google SSO routes implemented right here
 router.get('/google',
     passport.authenticate('google', {
         scope: [

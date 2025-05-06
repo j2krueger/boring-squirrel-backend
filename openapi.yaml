@@ -219,6 +219,39 @@ paths:
           content:
             application/json:
               example: { "error": "No user logged in." }
+  /newsletter:
+    summary: Submit an email address to recieve a newsletter
+    post:
+      tags:
+        - misc
+      summary: Submit an email address to recieve a newsletter
+      description:
+        POST an email address to the server to recive a newsletter. On success this will return a status of
+        200 and the new database entry. On error, the route will return a relevant status and error message.
+      operationId: post_newsletter
+      requestBody:
+        description: The email address to add to the database.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Newsletter"
+            example: { "address": "EasterBunny@example.com" }
+      responses:
+        "200":
+          description: "If the registration is successful, return the users private profile information to indicate success."
+          content:
+            application/json:
+              example: { "id": "23", "address": "EasterBunny@example.com" }
+        "400":
+          description: "If address is missing or not a string, return an error."
+          content:
+            application/json:
+              example: { "error": "Address must be a string." }
+        "409":
+          description: "address is already in the database."
+          content:
+            application/json:
+              example: { "error": "Address is already in database." }
 components:
   schemas:
     Register:
@@ -238,7 +271,13 @@ components:
         - username
         - password
       properties:
-        name:
+        username:
           type: string
         password:
+          type: string
+    Newsletter:
+      required:
+        - address
+      properties:
+        address:
           type: string
