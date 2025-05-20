@@ -41,6 +41,7 @@ module.exports = {
     sessionSecret: process.env.SESSIONSECRET,
     localDeploy: process.env.LOCALDEPLOY,
     testing: process.env.TESTING,
+    logging: process.env.LOGGING,
     mochaTestingUrl: process.env.MOCHA_TESTING_URL,
     testString: process.env.TEST_STRING,
     corsAllowURLs: process.env.SERVER_URL.split(' '),
