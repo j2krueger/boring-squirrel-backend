@@ -17,7 +17,7 @@ class User extends Model {
         if (!user) {
             return done(null, false, { message: "Incorrect username or password." });
         }
-        if (!await bcrypt.compare(password, user.passwordHash)) {
+        if (!(user.passwordHash && await bcrypt.compare(password, user.passwordHash))) {
             return done(null, false, { message: "Incorrect username or password." });
         }
         return done(null, user);
