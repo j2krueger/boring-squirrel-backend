@@ -102,6 +102,14 @@ class User extends Model {
                 }
             }
         }
+        if (settings.password) {
+            if (await bcrypt.compare(settings.password, this.passwordHash)) {
+                delete settings.password;
+            } else {
+                this.passwordHash = await bcrypt.hash(settings.password, globals.saltRounds);
+            }
+            delete settings.password;
+        }
         for (const key in settings) {
             this[key] = settings[key];
         }

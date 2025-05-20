@@ -330,7 +330,7 @@ describe('Test the user handling routes', function () {
                         expect(res).to.have.status(200);
                         expect(res.body).to.include(updatedTestUser);
                         // expect(dbUser.password).to.deep.equal(password);
-                        expect(await bcrypt.compare(password, dbUser.passwordHash));
+                        expect(await bcrypt.compare(password, dbUser.passwordHash)).to.be.true;
                     });
                 });
 
@@ -366,7 +366,7 @@ describe('Test the user handling routes', function () {
                         expect(dbUser.username).to.deep.equal(username);
                         expect(dbUser.email).to.deep.equal(email);
                         expect(dbUser.bio).to.deep.equal(bio);
-                        expect(await bcrypt.compare(password, dbUser.passwordHash));
+                        expect(await bcrypt.compare(password, dbUser.passwordHash)).to.be.true;
                     });
                 });
             });
