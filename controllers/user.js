@@ -57,6 +57,20 @@ function getProfile(req, res) {
 
 }
 
+async function putProfile(req, res, next) {
+    try {
+        const result = await req.authenticatedUser.applySettings(req.body);
+        req.session.user = result;
+        res.status(200).json(result.privateProfile());
+    } catch (error) {
+        if (error.code) {
+            return res.status(error.code).json({ error: error.message });
+        } else {
+            next(error);
+        }
+    }
+}
+
 async function getLeaderboard(req, res) {
     return res.status(200).json({
         highestWinLossRatio: [
@@ -80,5 +94,6 @@ module.exports = {
     getRoot,
     logoutUser,
     getProfile,
+    putProfile,
     getLeaderboard,
 };

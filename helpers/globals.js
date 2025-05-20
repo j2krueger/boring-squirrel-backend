@@ -32,8 +32,7 @@ module.exports = {
         "id",
         "username",
         "email",
-        "createdAt",
-        "updatedAt",
+        "bio",
     ],
 
     // configuration values loaded from .env

@@ -219,6 +219,47 @@ paths:
           content:
             application/json:
               example: { "error": "No user logged in." }
+    put:
+      tags:
+        - user
+      summary: PUT the user's new profile information
+      description: PUT new or updated information, and change the logged in user's database entry appropriately.
+      operationId: put_profile
+      requestBody:
+        description: A JSON object containing the new or updated information.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Profile"
+            example:
+              {
+                "username": "Freddy",
+                "password": "s33kr!t",
+                "email": "Freddy@example.com",
+                "bio": "I'm just a D00D.",
+              }
+      responses:
+        "200":
+          description: "If the change is successful, return the users private profile information to indicate success."
+          content:
+            application/json:
+              example:
+                {
+                  "username": "Freddy",
+                  "email": "Freddy@example.com",
+                  "bio": "I'm just a D00D.",
+                }
+        "400":
+          description: "If one of the submitted fields is the wrong type, return an error."
+          content:
+            application/json:
+              example: { "error": "Invalid request." }
+        "409":
+          description: "Username or email is already in use."
+          content:
+            application/json:
+              example:
+                { "error": "Invalid request: That email is already in use." }
   /newsletter:
     summary: Submit an email address to recieve a newsletter
     post:
@@ -274,6 +315,16 @@ components:
         username:
           type: string
         password:
+          type: string
+    Profile:
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        bio:
           type: string
     Newsletter:
       required:

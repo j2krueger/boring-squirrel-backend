@@ -79,6 +79,7 @@ router.get('/', userControllers.getRoot);
 router.post('/', userControllers.getRoot);
 router.post('/logout', userControllers.logoutUser);
 router.get('/profile', auth.userAuthNoRedirect, userControllers.getProfile);
+router.put('/profile', auth.userAuth, userControllers.putProfile);
 router.get('/leaderboard', userControllers.getLeaderboard);
 
 // misc routes

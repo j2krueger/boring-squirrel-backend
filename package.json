@@ -10,7 +10,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha -b --timeout 120000 --require ./test/hooks.mjs && jplay ~/Alarms/success-1.mp3 || jplay ~/Alarms/sad-trombone.mp3",
+    "test": "mocha -b --timeout 10000 --require ./test/hooks.mjs && jplay ~/Alarms/success-1.mp3 || jplay ~/Alarms/sad-trombone.mp3",
     "start": "nodemon --delay 5 index.js",
     "lint": "./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js",
     "finddebug": "! grep Debug -H -n *.js controllers/*.js helpers/*.js models/*.js routes/*.js test/*.*js",

@@ -12,9 +12,10 @@ const { testString } = globals;
 const testUsername = 'u' + testString;
 const testEmail = testUsername + '@example.com';
 const testPassword = testString;
+const testBio = testString;
 
 function generateTestUser(identifier) {
-    return { username: identifier + testUsername, email: identifier + testEmail, password: identifier + testPassword };
+    return { username: identifier + testUsername, email: identifier + testEmail, password: identifier + testPassword, bio: identifier + testBio };
 }
 
 export {

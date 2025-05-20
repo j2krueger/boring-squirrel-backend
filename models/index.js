@@ -3,7 +3,10 @@
 const globals = require('../helpers/globals');
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize(globals.databaseURI);
+const sequelize = new Sequelize(globals.databaseURI, {
+    logging: false,
+    // logging: console.log,
+});
 
 sequelize.authenticate({ logging: (sql) => { console.log(`Database: Testing database connection by ${sql}.`); } })
     .then(() => {

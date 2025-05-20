@@ -61,6 +61,55 @@ class User extends Model {
             return {};
         }
     }
+
+    async applySettings(settings) {
+        const userSettable = {
+            username: "string",
+            email: "string",
+            password: "string",
+            bio: "string",
+        }
+
+        // console.log(`Settings: set to ${JSON.stringify(settings, null, 4)}`);
+        for (const key in settings) {
+            if (!(key in userSettable && typeof settings[key] == userSettable[key])) {
+                const error = new Error("Invalid request.");
+                error.code = 400;
+                throw error;
+            }
+        }
+        if (settings.username) {
+            if (settings.username == this.username) {
+                delete settings.username;
+            } else {
+                const result = await User.findOne({ where: { username: settings.username } });
+                if (result) {
+                    const error = new Error("Invalid request: That username is already in use.");
+                    error.code = 409;
+                    throw error;
+                }
+            }
+        }
+        if (settings.email) {
+            if (settings.email == this.email) {
+                delete settings.email;
+            } else {
+                const result = await User.findOne({ where: { email: settings.email } });
+                if (result) {
+                    const error = new Error("Invalid request: That email is already in use.");
+                    error.code = 409;
+                    throw error;
+                }
+            }
+        }
+        for (const key in settings) {
+            this[key] = settings[key];
+        }
+        // if (settings.email) {
+        //     this.unverifyEmail();
+        // }
+        return (await this.save());
+    }
 }
 
 User.init(
@@ -79,6 +128,9 @@ User.init(
             type: DataTypes.TEXT,
             allowNull: false,
             unique: true,
+        },
+        bio: {
+            type: DataTypes.TEXT,
         },
         passwordHash: {
             type: DataTypes.TEXT,

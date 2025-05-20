@@ -1,6 +1,8 @@
 "use strict";
 
 import * as testGlobals from './globals.mjs';
+import * as bcrypt from 'bcrypt';
+// const bcrypt = require('bcrypt');
 
 const {
     // resources
@@ -249,13 +251,204 @@ describe('Test the user handling routes', function () {
 
         describe('Sad paths', function () {
             describe('Get /profile with no logged in user', function () {
-                it('should redirect to /login', async function () {
+                it('should return a 404 status and an error message', async function () {
                     await agent.post('/logout');
 
                     const res = await agent.get('/profile');
 
                     expect(res).to.have.status(404);
                     expect(res.body).to.deep.equal({ "error": "No user logged in." });
+                });
+            });
+        });
+    });
+
+    describe('PUT /profile', function () {
+        let testUser, testUserID;
+
+        beforeEach('Setup testUser to be modified and login as testUser', async function () {
+            testUser = generateTestUser('PP');
+            const regRes = await agent.post('/register').send(testUser);
+            expect(regRes).to.have.status(200);
+            const newUser = await User.getUserByUsername(testUser.username);
+            expect(newUser.id).to.exist;
+            testUserID = newUser.id;
+            const loginRes = await agent.post('/login').send(testUser);
+            expect(loginRes).to.have.status(200);
+        });
+
+        afterEach('Teardown modified testUser', async function () {
+            await agent.post('/logout');
+            const dbRes = await User.findByPk(testUserID);
+            await dbRes.destroy();
+        });
+
+        describe('Happy paths', function () {
+            describe('PUT /profile with logged in user', function () {
+                describe('PUT new username', function () {
+                    it('should return a 200 status and the updated data, and update the database', async function () {
+                        const username = 'new' + testUser.username;
+                        let updatedTestUser = testUser;
+                        updatedTestUser.username = username;
+                        delete updatedTestUser.password;
+                        delete updatedTestUser.bio;
+                        const res = await agent.put('/profile').send({ username });
+                        const dbUser = await User.findByPk(testUserID);
+
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.include(updatedTestUser);
+                        expect(dbUser.username).to.deep.equal(username);
+                    });
+                });
+
+                describe('PUT new email address', function () {
+                    it('should return a 200 status and the updated data, and update the database', async function () {
+                        const email = 'new' + testUser.email;
+                        let updatedTestUser = testUser;
+                        updatedTestUser.email = email;
+                        delete updatedTestUser.password;
+                        delete updatedTestUser.bio;
+                        const res = await agent.put('/profile').send({ email });
+                        const dbUser = await User.findByPk(testUserID);
+
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.include(updatedTestUser);
+                        expect(dbUser.email).to.deep.equal(email);
+                    });
+                });
+
+                describe('PUT new password', function () {
+                    it('should return a 200 status and the updated data, and update the database', async function () {
+                        const password = 'new' + testUser.email;
+                        let updatedTestUser = testUser;
+                        updatedTestUser.password = password;
+                        delete updatedTestUser.password;
+                        delete updatedTestUser.bio;
+                        const res = await agent.put('/profile').send({ password });
+                        const dbUser = await User.findByPk(testUserID);
+
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.include(updatedTestUser);
+                        // expect(dbUser.password).to.deep.equal(password);
+                        expect(await bcrypt.compare(password, dbUser.passwordHash));
+                    });
+                });
+
+                describe('PUT new bio', function () {
+                    it('should return a 200 status and the updated data, and update the database', async function () {
+                        const bio = 'new' + testUser.bio;
+                        let updatedTestUser = testUser;
+                        updatedTestUser.bio = bio;
+                        delete updatedTestUser.password;
+                        const res = await agent.put('/profile').send({ bio });
+                        const dbUser = await User.findByPk(testUserID);
+
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.include(updatedTestUser);
+                        expect(dbUser.bio).to.deep.equal(bio);
+                    });
+                });
+
+                describe('PUT with all fields', function () {
+                    it('should return a 200 status and the updated data, and update the database', async function () {
+                        const username = 'new' + testUser.username;
+                        const email = 'new' + testUser.email;
+                        const password = 'new' + testUser.password;
+                        const bio = 'new' + testUser.bio;
+                        let updatedTestUser = { username, email, password, bio };
+
+                        const res = await agent.put('/profile').send(updatedTestUser);
+                        delete updatedTestUser.password;
+                        const dbUser = await User.findByPk(testUserID);
+
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.include(updatedTestUser);
+                        expect(dbUser.username).to.deep.equal(username);
+                        expect(dbUser.email).to.deep.equal(email);
+                        expect(dbUser.bio).to.deep.equal(bio);
+                        expect(await bcrypt.compare(password, dbUser.passwordHash));
+                    });
+                });
+            });
+        });
+
+        describe('Sad paths', function () {
+            describe('PUT with no logged in user', function () {
+                it('should redirect to /login', async function () {
+                    await agent.post('/logout');
+
+                    const res = await agent.put('/profile').send({ bio: "bio" });
+
+                    expect(res).to.redirectTo(globals.mochaTestingUrl + '/login');
+                });
+            });
+
+            describe('PUT with logged in user but...', function () {
+                describe('PUT with duplicate username', function () {
+                    it('should return a 409 status and an error message', async function () {
+                        const duplicateUsername = generateTestUser('DT').username;
+
+                        const res = await agent.put('/profile').send({ username: duplicateUsername });
+
+                        expect(res).to.have.status(409);
+                        expect(res.body).to.deep.equal({ error: "Invalid request: That username is already in use." })
+                    });
+                });
+
+                describe('PUT with username not a string', function () {
+                    it('should return a 400 status and an error message', async function () {
+                        const res = await agent.put('/profile').send({ username: [] });
+
+                        expect(res).to.have.status(400);
+                        expect(res.body).to.deep.equal({ error: "Invalid request." });
+                    });
+                });
+
+                describe('PUT with duplicate email', function () {
+                    it('should return a 409 status and an error message', async function () {
+                        const duplicateEmail = generateTestUser('DT').email;
+
+                        const res = await agent.put('/profile').send({ email: duplicateEmail });
+
+                        expect(res).to.have.status(409);
+                        expect(res.body).to.deep.equal({ error: "Invalid request: That email is already in use." })
+                    });
+                });
+
+                describe('PUT with email not a string', function () {
+                    it('should return a 400 status and an error message', async function () {
+                        const res = await agent.put('/profile').send({ email: [] });
+
+                        expect(res).to.have.status(400);
+                        expect(res.body).to.deep.equal({ error: "Invalid request." });
+                    });
+                });
+
+                describe('PUT with password not a string', function () {
+                    it('should return a 400 status and an error message', async function () {
+                        const res = await agent.put('/profile').send({ password: [] });
+
+                        expect(res).to.have.status(400);
+                        expect(res.body).to.deep.equal({ error: "Invalid request." });
+                    });
+                });
+
+                describe('PUT with bio not a string', function () {
+                    it('should return a 400 status and an error message', async function () {
+                        const res = await agent.put('/profile').send({ bio: [] });
+
+                        expect(res).to.have.status(400);
+                        expect(res.body).to.deep.equal({ error: "Invalid request." });
+                    });
+                });
+
+                describe('PUT with non-settable field', function () {
+                    it('should return a 400 status and an error message', async function () {
+                        const res = await agent.put('/profile').send({ noseWeasel: "Nose Weasel" });
+
+                        expect(res).to.have.status(400);
+                        expect(res.body).to.deep.equal({ error: "Invalid request." });
+                    });
                 });
             });
         });
