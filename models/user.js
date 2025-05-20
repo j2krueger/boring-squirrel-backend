@@ -103,6 +103,8 @@ class User extends Model {
             }
         }
         if (settings.password) {
+            console.log('\n   Debug: ', settings.password, ', ', this.passwordHash);
+            console.log('\n   Debug: ', this);
             if (await bcrypt.compare(settings.password, this.passwordHash)) {
                 delete settings.password;
             } else {
