@@ -199,7 +199,7 @@ paths:
       tags:
         - user
       summary: GET the user's profile information
-      description: GET everything from the logged in user's Users row except the passwordHash.
+      description: GET ethe user's profile information, returning all fields listed in privateProfileFields as specified in ~/helpers/globals.js
       operationId: get_profile
       responses:
         "200":
@@ -211,8 +211,7 @@ paths:
                   "id": 23,
                   "username": "john",
                   "email": "john@example.com",
-                  "createdAt": "2025-01-20T17:24:03.127Z",
-                  "updatedAt": "2025-01-20T17:24:03.127Z",
+                  "bio": "This is my bio.",
                 }
         "404":
           description: No logged in user
@@ -260,6 +259,21 @@ paths:
             application/json:
               example:
                 { "error": "Invalid request: That email is already in use." }
+  /users:
+    summary: GET a list of all users
+    get:
+      tags:
+        - user
+      summary: GET a list of all users
+      description: GET a list of all users, returning all fields listed in summaryProfileFields as specified in ~/helpers/globals.js
+      operationId: get_users
+      responses:
+        "200":
+          description: Success!
+          content:
+            application/json:
+              example:
+                { "id": 23, "username": "john", "bio": "This is my bio." }
   /newsletter:
     summary: Submit an email address to recieve a newsletter
     post:
