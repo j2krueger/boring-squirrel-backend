@@ -3,6 +3,7 @@
 import * as globalsModule from './globals.mjs';
 import bcrypt from 'bcrypt';
 import DB from '../models/index.js';
+import { Op } from 'sequelize';
 
 const {
     // resources
@@ -49,6 +50,10 @@ export const mochaHooks = {
 
         const dbDefaultTestUser = await User.getUserByUsername(generateTestUser('DT').username);
         await dbDefaultTestUser.destroy();
+        const testUsers = await User.findAll({ where: { username: { [Op.like]: globalsModule.testString } } });
+        if (testUsers.length) {
+            await testUsers.destroy();
+        }
 
         await DB.sequelize.close();
         console.timeEnd('Total testing time');

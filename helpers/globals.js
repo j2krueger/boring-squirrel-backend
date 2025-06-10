@@ -34,6 +34,16 @@ module.exports = {
         "email",
         "bio",
     ],
+    publicProfileFields: [
+        "id",
+        "username",
+        "bio",
+    ],
+    summaryProfileFields: [
+        "id",
+        "username",
+        "bio",
+    ],
 
     // configuration values loaded from .env
     port: process.env.PORT,

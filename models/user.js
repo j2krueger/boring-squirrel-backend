@@ -62,6 +62,30 @@ class User extends Model {
         }
     }
 
+    publicProfile() {
+        if (this.id) {
+            const result = {};
+            for (const property of globals.publicProfileFields) {
+                result[property] = this[property];
+            }
+            return result;
+        } else {
+            return {};
+        }
+    }
+
+    summaryProfile() {
+        if (this.id) {
+            const result = {};
+            for (const property of globals.summaryProfileFields) {
+                result[property] = this[property];
+            }
+            return result;
+        } else {
+            return {};
+        }
+    }
+
     async applySettings(settings) {
         const userSettable = {
             username: "string",

@@ -71,6 +71,16 @@ async function putProfile(req, res, next) {
     }
 }
 
+async function getUsers(req, res) {
+    try {
+        const users = await User.findAll();
+        const summaries = users.map(user => user.publicProfile());
+        return res.status(200).json(summaries);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
 async function getLeaderboard(req, res) {
     return res.status(200).json({
         highestWinLossRatio: [
@@ -95,5 +105,6 @@ module.exports = {
     logoutUser,
     getProfile,
     putProfile,
+    getUsers,
     getLeaderboard,
 };

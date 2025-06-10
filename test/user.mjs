@@ -2,7 +2,6 @@
 
 import * as testGlobals from './globals.mjs';
 import * as bcrypt from 'bcrypt';
-// const bcrypt = require('bcrypt');
 
 const {
     // resources
@@ -451,6 +450,40 @@ describe('Test the user handling routes', function () {
                     });
                 });
             });
+        });
+    });
+
+    describe('GET /users', function () {
+        describe('Happy paths', function () {
+            describe('Login and GET', function () {
+                it('should return a status of 200 and a list of users', async function () {
+                    const defaultTestUser = generateTestUser('DT');
+                    const loginCredentials = { username: defaultTestUser.username, password: defaultTestUser.password };
+                    const loginRes = await agent.post('/login').send(loginCredentials);
+                    expect(loginRes).to.redirectTo(globals.mochaTestingUrl + '/');
+                    const userList = JSON.parse(JSON.stringify(await User.findAll({ attributes: globals.summaryProfileFields })));
+
+                    const res = await agent.get('/users');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.deep.equal(userList);
+                });
+            });
+
+            describe('Logout and GET', function () {
+                it('should return a status of 200 and a list of users', async function () {
+                    const loRes = await agent.post('/logout');
+                    expect(loRes).to.redirectTo(globals.mochaTestingUrl + '/');
+                    const userList = JSON.parse(JSON.stringify(await User.findAll({ attributes: globals.summaryProfileFields })));
+
+                    const res = await agent.get('/users');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.deep.equal(userList);
+                });
+            });
+        });
+
+        describe('Sad paths', function () {
+            // None
         });
     });
 });
