@@ -6,6 +6,23 @@ const { minimumPasswordLength, maximumUsernameLength, saltRounds } = globals;
 const { User } = require('../models/combined');
 // const OAuth = require('../models/oauth');
 
+async function paramUserId(req, res, next, value) {
+    if (!/^[0-9]{1,10}$/.test(value) || value > 0xffffffff) {
+        return res.status(400).json({ error: "That is not a properly formatted userId." });
+    }
+    try {
+        const result = await User.findByPk(value);
+        // const result = await User.findByIdAndPopulate(value);
+        if (!result) {
+            return res.status(404).json({ error: "There is no user with that userId." });
+        }
+        req.paramUser = result;
+        return next();
+    } catch (error) {
+        return next(error);
+    }
+}
+
 async function registerUser(req, res) {
     if (!req.body?.password) {
         return res.status(400).json({ error: "Missing password." });
@@ -81,6 +98,10 @@ async function getUsers(req, res) {
     }
 }
 
+async function getUserInfoById(req, res) {
+    return res.status(200).json(await req.paramUser.publicProfile());
+}
+
 async function getLeaderboard(req, res) {
     return res.status(200).json({
         highestWinLossRatio: [
@@ -99,6 +120,7 @@ async function getLeaderboard(req, res) {
 }
 
 module.exports = {
+    paramUserId,
     registerUser,
     // loginUser,
     getRoot,
@@ -106,5 +128,6 @@ module.exports = {
     getProfile,
     putProfile,
     getUsers,
+    getUserInfoById,
     getLeaderboard,
 };

@@ -167,6 +167,11 @@ User.init(
         passwordHash: {
             type: DataTypes.TEXT,
         },
+        admin: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        }
     },
     {
         sequelize: DB.sequelize,

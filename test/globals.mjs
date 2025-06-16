@@ -18,6 +18,10 @@ function generateTestUser(identifier) {
     return { username: identifier + testUsername, email: identifier + testEmail, password: identifier + testPassword, bio: identifier + testBio };
 }
 
+function generateTestUserLoginCredentials(identifier) {
+    return { username: identifier + testUsername, password: identifier + testPassword }
+}
+
 export {
     // resources
     expect,
@@ -32,4 +36,5 @@ export {
     User,
     // functions
     generateTestUser,
+    generateTestUserLoginCredentials,
 };

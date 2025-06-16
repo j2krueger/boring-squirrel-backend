@@ -17,6 +17,7 @@ const {
     User,
     // functions
     generateTestUser,
+    generateTestUserLoginCredentials,
 } = testGlobals;
 
 const testUser = generateTestUser('2');
@@ -457,9 +458,7 @@ describe('Test the user handling routes', function () {
         describe('Happy paths', function () {
             describe('Login and GET', function () {
                 it('should return a status of 200 and a list of users', async function () {
-                    const defaultTestUser = generateTestUser('DT');
-                    const loginCredentials = { username: defaultTestUser.username, password: defaultTestUser.password };
-                    const loginRes = await agent.post('/login').send(loginCredentials);
+                    const loginRes = await agent.post('/login').send(generateTestUserLoginCredentials('DT'));
                     expect(loginRes).to.redirectTo(globals.mochaTestingUrl + '/');
                     const userList = JSON.parse(JSON.stringify(await User.findAll({ attributes: globals.summaryProfileFields })));
 
@@ -484,6 +483,56 @@ describe('Test the user handling routes', function () {
 
         describe('Sad paths', function () {
             // None
+        });
+    });
+
+    describe('GET /users/:userId', function () {
+        describe('Happy paths', function () {
+            describe('Login and GET /users/:userId with valid userId', function () {
+                it('should return status 200 and the publicProfile() coresponding to the userId', async function () {
+                    const loginRes = await agent.post('/login').send(generateTestUserLoginCredentials('DT'));
+                    expect(loginRes).to.redirectTo(globals.mochaTestingUrl + '/');
+                    const user = await User.getUserByUsername(generateTestUser('DT').username);
+
+                    const res = await agent.get('/users/' + user.id);
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.deep.equal(user.publicProfile());
+                });
+            });
+
+            describe('Logout and GET /users/:userId with valid userId', function () {
+                it('should return status 200 and the publicProfile() coresponding to the userId', async function () {
+                    const loRes = await agent.post('/logout');
+                    expect(loRes).to.redirectTo(globals.mochaTestingUrl + '/');
+                    const user = await User.getUserByUsername(generateTestUser('DT').username);
+
+                    const res = await agent.get('/users/' + user.id);
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.deep.equal(user.publicProfile());
+                });
+            });
+        });
+
+        describe('Sad paths', function () {
+            describe('GET /users/:userId with invalid userId', function () {
+                it('should return status 404 and an error message', async function () {
+                    const users = await User.findAll();
+                    users.sort((a, b) => b.id - a.id);
+                    const badId = users[0].id + 1;
+
+                    const res = await agent.get('/users/' + badId);
+                    expect(res).to.have.status(404);
+                    expect(res.body).to.deep.equal({ error: "There is no user with that userId." });
+                });
+            });
+
+            describe('GET /users/:userId with bad userId format', function () {
+                it('should return status 400 and an error message', async function () {
+                    const res = await agent.get('/users/zero');
+                    expect(res).to.have.status(400);
+                    expect(res.body).to.deep.equal({ error: "That is not a properly formatted userId." })
+                });
+            });
         });
     });
 });

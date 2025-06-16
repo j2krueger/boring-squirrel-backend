@@ -273,7 +273,47 @@ paths:
           content:
             application/json:
               example:
+                [
+                  {
+                    "id": 17,
+                    "username": "Freddy",
+                    "bio": "I stole john's bio.",
+                  },
+                  { "id": 23, "username": "john", "bio": "This is my bio." },
+                ]
+  /users/{userId}:
+    summary: GET the public information of a user by user id.
+    get:
+      tags:
+        - user
+      summary: GET the public information of a user by user id.
+      description: GET the public information of a user by user id, returning all fields listed in publicProfileFields as specified in ~/helpers/globals.js
+      operationId: get_user_by_id
+      parameters:
+        - name: userId
+          in: path
+          description: the ID of the user
+          required: true
+          style: simple
+          explode: false
+          schema: {}
+      responses:
+        "200":
+          description: Success!
+          content:
+            application/json:
+              example:
                 { "id": 23, "username": "john", "bio": "This is my bio." }
+        "400":
+          description: User id is not in the correct format.
+          content:
+            application/json:
+              example: { "error": "That is not a properly formatted userId." }
+        "404":
+          description: User not found.
+          content:
+            application/json:
+              example: { "error": "There is no user with that userId." }
   /newsletter:
     summary: Submit an email address to recieve a newsletter
     post:

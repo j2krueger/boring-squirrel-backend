@@ -63,6 +63,9 @@ passport.deserializeUser(function (id, cb) {
     });
 });
 
+// All param middleware goes here
+router.param('userId', userControllers.paramUserId);
+
 // user related routes
 router.post('/register', userControllers.registerUser);
 router.post('/login', passport.authenticate('local', {
@@ -81,6 +84,7 @@ router.post('/logout', userControllers.logoutUser);
 router.get('/profile', auth.userAuthNoRedirect, userControllers.getProfile);
 router.put('/profile', auth.userAuth, userControllers.putProfile);
 router.get('/users', userControllers.getUsers);
+router.get('/users/:userId', userControllers.getUserInfoById);
 router.get('/leaderboard', userControllers.getLeaderboard);
 
 // misc routes
