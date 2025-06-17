@@ -212,6 +212,7 @@ paths:
                   "username": "john",
                   "email": "john@example.com",
                   "bio": "This is my bio.",
+                  "createdAt": "2025-06-17T15:21:10.353Z",
                 }
         "404":
           description: No logged in user
