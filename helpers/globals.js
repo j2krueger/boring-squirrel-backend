@@ -33,11 +33,13 @@ module.exports = {
         "username",
         "email",
         "bio",
+        "createdAt",
     ],
     publicProfileFields: [
         "id",
         "username",
         "bio",
+        "createdAt",
     ],
     summaryProfileFields: [
         "id",

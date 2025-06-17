@@ -303,7 +303,12 @@ paths:
           content:
             application/json:
               example:
-                { "id": 23, "username": "john", "bio": "This is my bio." }
+                {
+                  "id": 23,
+                  "username": "john",
+                  "bio": "This is my bio.",
+                  "createdAt": "2025-06-17T15:21:10.353Z",
+                }
         "400":
           description: User id is not in the correct format.
           content:

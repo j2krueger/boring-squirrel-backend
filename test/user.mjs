@@ -496,7 +496,7 @@ describe('Test the user handling routes', function () {
 
                     const res = await agent.get('/users/' + user.id);
                     expect(res).to.have.status(200);
-                    expect(res.body).to.deep.equal(user.publicProfile());
+                    expect(JSON.parse(JSON.stringify(res.body))).to.deep.equal(JSON.parse(JSON.stringify(user.publicProfile())));
                 });
             });
 
@@ -508,7 +508,7 @@ describe('Test the user handling routes', function () {
 
                     const res = await agent.get('/users/' + user.id);
                     expect(res).to.have.status(200);
-                    expect(res.body).to.deep.equal(user.publicProfile());
+                    expect(res.body).to.deep.equal(JSON.parse(JSON.stringify(user.publicProfile())));
                 });
             });
         });

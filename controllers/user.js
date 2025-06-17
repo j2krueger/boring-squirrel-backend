@@ -91,7 +91,7 @@ async function putProfile(req, res, next) {
 async function getUsers(req, res) {
     try {
         const users = await User.findAll();
-        const summaries = users.map(user => user.publicProfile());
+        const summaries = users.map(user => user.summaryProfile());
         return res.status(200).json(summaries);
     } catch (error) {
         res.status(500).json(error);
