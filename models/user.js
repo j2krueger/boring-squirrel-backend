@@ -2,7 +2,6 @@
 
 const DB = require('./index');
 const { DataTypes, Model } = require("sequelize");
-// const globals = require('../helpers/globals');
 const bcrypt = require('bcrypt');
 const globals = require('../helpers/globals');
 

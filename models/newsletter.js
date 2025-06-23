@@ -1,7 +1,5 @@
 "use strict";
 
-"use strict";
-
 const DB = require('./index');
 const { DataTypes, Model } = require("sequelize");
 
@@ -13,11 +11,6 @@ class Newsletter extends Model {
 
 Newsletter.init(
     {
-        // id: {
-        //     type: DataTypes.INTEGER,
-        //     autoIncrement: true,
-        //     primaryKey: true,
-        // }, 
         address: {
             type: DataTypes.TEXT,
             allowNull: false,

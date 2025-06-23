@@ -1,5 +1,6 @@
 "use strict";
 
+const IndependentGame = require('../models/independentGame');
 // const globals = require('../helpers/globals');
 const Newsletter = require('../models/newsletter');
 
@@ -21,6 +22,27 @@ async function newsletter(req, res) {
     }
 }
 
+async function postIndependentGame(req, res) {
+    try {
+        if ('verified' in req.body) {
+            return res.status(400).json({ error: "Lolnope." })
+        }
+        const result = await IndependentGame.create(req.body);
+        return res.status(200).json(result);
+    } catch (error) {
+        const error0 = error.errors?.[0];
+        console.log('\n   Debug: ', error0);
+        if (error0?.type == 'unique violation') {
+            return res.status(409).json({ error: error0?.message });
+        }
+        if (error0?.type == 'notNull Violation' || error0?.type == 'string violation') {
+            return res.status(400).json({ error: error0?.message });
+        }
+        return res.status(500).json(error);
+    }
+}
+
 module.exports = {
     newsletter,
+    postIndependentGame,
 };

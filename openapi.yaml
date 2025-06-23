@@ -353,6 +353,67 @@ paths:
           content:
             application/json:
               example: { "error": "Address is already in database." }
+  /independentgame:
+    summary: Submit a game for the Independent Games page
+    post:
+      tags:
+        - misc
+      summary: Submit a game for the Independent Games page
+      description:
+        Submit a game for the Independent Games page. On success this will add the game entry to the moderation queue, return a status of 200,
+        and the new database entry. On error, the route will return a relevant status code and error message.
+      operationId: post_independent_game
+      requestBody:
+        description: The game information to add to the database.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IndependentGame"
+            example:
+              {
+                "gameName": "Squirrel Game",
+                "description": "squirrelly description",
+                "imageUrl": "https://www.example.com/image1.jpg",
+                "tag1": "tag1",
+                "tag2": "tag2",
+                "tag3": "tag3",
+                "category": "squirrelly category",
+                "linkUrl": "https://www.example.com/",
+                "email": "email@example.com",
+                "additionalInfo": "additional squirrelly info",
+              }
+      responses:
+        "200":
+          description: "If the registration is successful, return the new database entry to indicate success."
+          content:
+            application/json:
+              example:
+                {
+                  "id": 99,
+                  "gameName": "Squirrel Game",
+                  "description": "squirrelly description",
+                  "imageUrl": "https://www.example.com/image1.jpg",
+                  "tag1": "tag1",
+                  "tag2": "tag2",
+                  "tag3": "tag3",
+                  "category": "squirrelly category",
+                  "linkUrl": "https://www.example.com/",
+                  "email": "email@example.com",
+                  "additionalInfo": "additional squirrelly info",
+                  "verified": false,
+                  "updatedAt": "2025-06-23T16:45:16.308Z",
+                  "createdAt": "2025-06-23T16:45:16.308Z",
+                }
+        "400":
+          description: "If a required field is missing or a field is in the wrong format, return an error."
+          content:
+            application/json:
+              example: { "error": "IndependentGame.gameName cannot be null" }
+        "409":
+          description: "gameName is already in the database."
+          content:
+            application/json:
+              example: { "error": "gameName must be unique" }
 components:
   schemas:
     Register:
@@ -391,4 +452,33 @@ components:
         - address
       properties:
         address:
+          type: string
+    IndependentGame:
+      required:
+        - gameName
+        - description
+        - imageUrl
+        - category
+        - linkUrl
+        - email
+      properties:
+        gameName:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+        tag1:
+          type: string
+        tag2:
+          type: string
+        tag3:
+          type: string
+        category:
+          type: string
+        linkUrl:
+          type: string
+        email:
+          type: string
+        additionalInfo:
           type: string

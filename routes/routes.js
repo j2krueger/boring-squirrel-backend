@@ -89,6 +89,7 @@ router.get('/leaderboard', userControllers.getLeaderboard);
 
 // misc routes
 router.post('/newsletter', miscControllers.newsletter);
+router.post('/independentgame', miscControllers.postIndependentGame);
 
 // Google SSO routes implemented right here
 router.get('/google',

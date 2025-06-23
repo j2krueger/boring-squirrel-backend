@@ -3,6 +3,7 @@
 import { expect, use } from 'chai';
 import chaiHttp from "chai-http";
 import User from '../models/user.js';
+import IndependentGame from '../models/independentGame.js';
 
 const chai = use(chaiHttp);
 const globals = (await import('../helpers/globals.js')).default;
@@ -34,6 +35,7 @@ export {
     testPassword,
     // models
     User,
+    IndependentGame,
     // functions
     generateTestUser,
     generateTestUserLoginCredentials,

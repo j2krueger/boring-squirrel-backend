@@ -3,8 +3,8 @@
 const DB = require('./index');
 const User = require('./user');
 const OAuth = require('./oauth');
-// eslint-disable-next-line no-unused-vars
 const Newsletter = require('./newsletter');
+const IndependentGame = require('./independentGame');
 
 
 User.hasMany(OAuth);
@@ -15,4 +15,9 @@ DB.sequelize.sync({ alter: true })
         console.log('  Database synced.');
     });
 
-module.exports = DB.sequelize.models;
+module.exports = {
+    User,
+    OAuth,
+    Newsletter,
+    IndependentGame,
+};
