@@ -1,8 +1,7 @@
 "use strict";
 
-const IndependentGame = require('../models/independentGame');
 // const globals = require('../helpers/globals');
-const Newsletter = require('../models/newsletter');
+const { IndependentGame, Newsletter } = require('../models/combined');
 
 async function newsletter(req, res) {
     const address = req.body?.address;
@@ -31,7 +30,6 @@ async function postIndependentGame(req, res) {
         return res.status(200).json(result);
     } catch (error) {
         const error0 = error.errors?.[0];
-        console.log('\n   Debug: ', error0);
         if (error0?.type == 'unique violation') {
             return res.status(409).json({ error: error0?.message });
         }

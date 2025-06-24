@@ -6,8 +6,42 @@ info:
 servers:
   - url: /
 paths:
+  /admin/independentgame:
+    summary: GET/verify entries in the IndependentGames table
+    get:
+      tags:
+        - Admin
+      summary: GET all of the entries in the IndependentGames table
+      description:
+        If there is a logged in user with the value admin set to true in their entry in the Users table,
+        return a list of all of the entries in the IndependentGames table, otherwise redirect to /login.
+      operationId: get_independent_games
+      responses:
+        "200":
+          description: Success!
+          content:
+            application/json:
+              example:
+                [
+                  {
+                    "id": 99,
+                    "gameName": "Squirrel Game",
+                    "description": "squirrelly description",
+                    "imageUrl": "https://www.example.com/image1.jpg",
+                    "tag1": "tag1",
+                    "tag2": "tag2",
+                    "tag3": "tag3",
+                    "category": "squirrelly category",
+                    "linkUrl": "https://www.example.com/",
+                    "email": "email@example.com",
+                    "additionalInfo": "additional squirrelly info",
+                    "verified": false,
+                    "updatedAt": "2025-06-23T16:45:16.308Z",
+                    "createdAt": "2025-06-23T16:45:16.308Z",
+                  },
+                ]
   /register:
-    summary: GET/POST registration
+    summary: Register a new user
     post:
       tags:
         - User

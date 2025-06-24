@@ -6,6 +6,7 @@ const router = express.Router();
 const cors = require('cors');
 const userControllers = require('../controllers/user');
 const miscControllers = require('../controllers/misc');
+const adminControllers = require('../controllers/admin');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const GoogleStrategy = require('passport-google-oauth20');
@@ -65,6 +66,12 @@ passport.deserializeUser(function (id, cb) {
 
 // All param middleware goes here
 router.param('userId', userControllers.paramUserId);
+
+// All routes starting with /admin are restricted to logged in admins
+router.use('/admin', auth.adminAuth);
+
+// All admin routes go here
+router.get('/admin/independentgame', adminControllers.getIndependentGame);
 
 // user related routes
 router.post('/register', userControllers.registerUser);

@@ -7,19 +7,18 @@ const globals = require('../helpers/globals');
 
 class User extends Model {
     static async passportVerify(username, password, done) {
-        let user;
         try {
-            user = (await User.getUserByUsername(username)) || (await User.getUserByEmail(username));
+            const user = (await User.getUserByUsername(username)) || (await User.getUserByEmail(username));
+            if (!user) {
+                return done(null, false, { message: "Incorrect username or password." });
+            }
+            if (!(user.passwordHash && await bcrypt.compare(password, user.passwordHash))) {
+                return done(null, false, { message: "Incorrect username or password." });
+            }
+            return done(null, user);
         } catch (error) {
             return done(error);
         }
-        if (!user) {
-            return done(null, false, { message: "Incorrect username or password." });
-        }
-        if (!(user.passwordHash && await bcrypt.compare(password, user.passwordHash))) {
-            return done(null, false, { message: "Incorrect username or password." });
-        }
-        return done(null, user);
     }
 
     static async passportGoogleVerify(req, accessToken, refreshToken, profile, done) {
