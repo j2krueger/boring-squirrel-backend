@@ -34,6 +34,7 @@ module.exports = {
         "email",
         "bio",
         "createdAt",
+        "admin",
     ],
     publicProfileFields: [
         "id",
