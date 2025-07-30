@@ -449,6 +449,26 @@ paths:
           content:
             application/json:
               example: { "error": "gameName must be unique" }
+  /game:
+    summary: GET a list of all available games.
+    get:
+      tags:
+        - game
+      summary: GET a list of all available games.
+      description: GET a list of all available games, returning an id, name, description, and rules for each one.
+      operationId: get_games
+      responses:
+        "200":
+          description: Success!
+          content:
+            application/json:
+              example:
+                {
+                  "id": 1,
+                  "name": "Acorn Sweeper",
+                  "description": "Minesweeper, but with a squirrel theme.",
+                  "rules": "Left click on a square to reveal what's there. Right click on an unrevealed square to mark or unmark it.",
+                }
 components:
   schemas:
     Register:

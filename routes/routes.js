@@ -7,6 +7,7 @@ const cors = require('cors');
 const userControllers = require('../controllers/user');
 const miscControllers = require('../controllers/misc');
 const adminControllers = require('../controllers/admin');
+const gameControllers = require('../controllers/game');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const GoogleStrategy = require('passport-google-oauth20');
@@ -93,6 +94,9 @@ router.put('/profile', auth.userAuth, userControllers.putProfile);
 router.get('/users', userControllers.getUsers);
 router.get('/users/:userId', userControllers.getUserInfoById);
 router.get('/leaderboard', userControllers.getLeaderboard);
+
+// game routes
+router.get('/game', gameControllers.getGame);
 
 // misc routes
 router.post('/newsletter', miscControllers.newsletter);
